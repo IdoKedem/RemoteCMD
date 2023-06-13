@@ -55,8 +55,16 @@ def create_login_window():
 
 def create_cmd_window():
     tk.Label(text="REMOTE CMD", font=('ariel', '20')).place(x=150)
-    text_box = tk.Text(width=40, height=19)
+
+    text_box = tk.Text(width=40, height=17)
     text_box.place(x=80, y=40)
+    text_box.config(state='disabled')
+
+    cmd_entry = tk.Entry(font=('ariel', 15))
+    cmd_entry.place(x=80, y=350)
+
+    tk.Button(command=lambda: None,
+              text="Send", font=('ariel', 11)).place(x=320, y=350)
 
 if __name__ == '__main__':
     connect_to_server()
