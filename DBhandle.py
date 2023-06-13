@@ -33,3 +33,11 @@ def initialize_db():
         print(user)
 
 initialize_db()
+
+
+def is_permitted(username, password):
+
+    cursor.execute(f"""SELECT * FROM users WHERE 
+            username = '{username}' AND password = '{password}'""")
+    data = cursor.fetchone()
+    return bool(data)
