@@ -25,6 +25,7 @@ def validate_login(username_entry, password_entry):
 
     if DBhandle.validate_login(client_socket, username, password):
         clear_window()
+        create_cmd_window()
     else:
         clear_entries(username_entry, password_entry)
         tk.Label(text="Try again", font=('ariel, 15')).place(x=185, y=250)
@@ -53,8 +54,9 @@ def create_login_window():
               text="Login", font=('ariel', '13')).place(x=200, y=210)
 
 def create_cmd_window():
-    pass
-
+    tk.Label(text="REMOTE CMD", font=('ariel', '20')).place(x=150)
+    text_box = tk.Text(width=40, height=19)
+    text_box.place(x=80, y=40)
 
 if __name__ == '__main__':
     connect_to_server()

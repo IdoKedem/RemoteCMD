@@ -55,7 +55,7 @@ def initialize_db():
     run("""CREATE TABLE IF NOT EXISTS users(
             ID INTEGER PRIMARY KEY, username TEXT, password TEXT)""")
     users = \
-        [User('David', 'Lenovo'), User('Moshe', 'Asus')]
+        [User('David', 'Lenovo'), User('Moshe', 'Asus'), User('','')]
 
     for user in users:
         run(f"""INSERT INTO users (username, password) VALUES('{user.username}',
