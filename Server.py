@@ -1,10 +1,11 @@
-import socket, sqlite3
-import HashMD5
+import socket
+import DBhandle, HashMD5
+
+SENDING_LOGIN_INFO: str = '$$$' # special string that is used when transferring login data
 
 PORT = 4444
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-SENDING_DATA: str = '$$$' # special string that is used when transferring login data
 
 def server_listen():
     server_socket.bind(('192.168.14.20', PORT))
@@ -20,47 +21,16 @@ def server_accept():
 
 def server_receive():
     msg = client.recv(1024).decode()
+    return msg
+
+def validate_login():
+    msg = server_receive()
     data = msg.split('\n')
-    if data[0] == SENDING_DATA:
+    if data[0] == SENDING_LOGIN_INFO:
         _, username, password = data
-        return validate_login(username, password)
-
-    print("unknown data")
-
-connection = sqlite3.connect('Usersdb.db')
-cursor = connection.cursor()
+        password = HashMD5.encrypt(password)
+        return DBhandle.validate_login(username, password)
+    return False
 
 
-def validate_login(username, password):
-    cursor.execute(f"""SELECT * FROM users WHERE 
-                username = '{username}' AND password = '{password}'""")
-    data = cursor.fetchone()
-    return bool(data)
-
-class User:
-    def __init__(self, username, password: str):
-        self.username = username
-        self.password = HashMD5.encrypt(password)
-
-    def __str__(self):
-        return \
-            f"Username: {self.username} \nPassword: {self.password}"
-
-def run(command):
-    cursor.execute(command)
-    connection.commit()
-
-def initialize_db():
-
-    run("""CREATE TABLE IF NOT EXISTS users(
-            ID INTEGER PRIMARY KEY, username TEXT, password TEXT)""")
-    users = \
-        [User('David', 'Lenovo'), User('Moshe', 'Asus'), User('','')]
-
-    for user in users:
-        run(f"""INSERT INTO users (username, password) VALUES('{user.username}',
-                '{user.password}')""")
-        print(user)
-
-initialize_db()
 

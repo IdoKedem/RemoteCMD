@@ -1,6 +1,5 @@
-import socket, tkinter as tk, Server
-import DBhandle
-import HashMD5
+import socket, tkinter as tk
+import Server
 
 
 def connect_to_server():
@@ -20,10 +19,15 @@ def send_to_server(msg: str):
     client_socket.send(msg.encode('utf-8'))
 
 def validate_login(username_entry, password_entry):
-    username = username_entry.get()
-    password = HashMD5.encrypt(password_entry.get())
 
-    if DBhandle.validate_login(client_socket, username, password):
+    username = username_entry.get()
+    password = password_entry.get()
+
+    data = \
+        f"""{Server.SENDING_LOGIN_INFO}\n{username}\n{password}"""
+
+    client_socket.send(data.encode('utf-8'))
+    if Server.validate_login():
         clear_window()
         create_cmd_window()
     else:
