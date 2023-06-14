@@ -8,8 +8,18 @@ PORT = 4444
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
+def get_ipv4_address():
+    """
+    retrives the user's IP address
+    :return: IPv4 address as a string
+    """
+    hostname = socket.gethostname()
+    ip_address: str = socket.gethostbyname(hostname)
+    return ip_address
+
 def server_listen():
-    server_socket.bind(('192.168.14.20', PORT))
+    ip: str = get_ipv4_address()
+    server_socket.bind((ip, PORT))
 
     server_socket.listen()
     print("Server Waiting...")

@@ -9,6 +9,15 @@ def initialize_app():
     app.title("RemoteCMD by Ido Kedem")
 
 
+def get_ipv4_address():
+    """
+    retrives the user's IP address
+    :return: IPv4 address as a string
+    """
+    hostname = socket.gethostname()
+    ip_address: str = socket.gethostbyname(hostname)
+    return ip_address
+
 def connect_to_server():
     """
     this function connets to the server without the user needing to
@@ -21,7 +30,9 @@ def connect_to_server():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     Server.server_listen()
-    client_socket.connect(('192.168.14.20', PORT))
+
+    ip: str = get_ipv4_address()
+    client_socket.connect((ip, PORT))
 
     Server.server_accept()
     print("Client Connected!")
@@ -144,6 +155,7 @@ def show_cmd_output():
 
 
 if __name__ == '__main__':
+    get_ipv4_address()
     connect_to_server()
 
     initialize_app()
