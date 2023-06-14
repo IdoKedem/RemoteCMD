@@ -21,6 +21,11 @@ def server_accept():
     print("Server Connected!")
 
 def validate_login():
+    """
+    this function receives login info and checks if the user
+    exists in the databse
+    :return: True if the user exists, False otherwise
+    """
     sent_data = client.recv(1024).decode()
     login_info = sent_data.split('\n')
     if login_info[0] == SENDING_LOGIN_INFO:
@@ -29,6 +34,10 @@ def validate_login():
     return False
 
 def run_cmd_command():
+    """
+    this function runs the user's given cmd command
+    :return: the cmd output
+    """
     sent_data = client.recv(1024).decode()
     sent_data = sent_data.split('\n')
     if sent_data[0] == SENDING_CMD_COMMAND:

@@ -10,6 +10,11 @@ def initialize_app():
 
 
 def connect_to_server():
+    """
+    this function connets to the server without the user needing to
+    run the Server.py scripts
+    :return:
+    """
     PORT = 4444
 
     global client_socket
@@ -25,7 +30,14 @@ def connect_to_server():
 def send_to_server(msg: str):
     client_socket.send(msg.encode('utf-8'))
 
-def validate_login(username_entry, password_entry):
+def validate_login(username_entry: tk.Entry, password_entry: tk.Entry):
+    """
+    this function validates the login info the user provided and
+    act accordingly
+    :param username_entry: the usernames entry
+    :param password_entry: the password
+    :return:
+    """
 
     username = username_entry.get()
     password = password_entry.get()
@@ -42,15 +54,28 @@ def validate_login(username_entry, password_entry):
         tk.Label(text="Try again", font=('ariel, 15')).place(x=185, y=250)
 
 def clear_window():
+    """
+    clears the window from widgets
+    :return:
+    """
     for widget in app.winfo_children():
         widget.destroy()
 
 def clear_entries(*entries):
+    """
+    clears text in all given entries
+    :param entries: a tuple of all desired entries
+    :return:
+    """
     for entry in entries:
         entry.delete(0, tk.END)
 
 
 def create_login_window():
+    """
+    this function creates the first window the user sees
+    :return:
+    """
     tk.Label(text="Login", font=('ariel', '30')).place(x=180, y=10)
 
     tk.Label(text="Username:", font=('ariel', '15')).place(x=180, y=80)
@@ -65,6 +90,10 @@ def create_login_window():
               text="Login", font=('ariel', '13')).place(x=200, y=210)
 
 def create_cmd_window():
+    """
+    this function creates the second window the user sees
+    :return:
+    """
     tk.Label(text="REMOTE CMD", font=('ariel', '20')).place(x=150)
 
     global text_box
@@ -79,6 +108,12 @@ def create_cmd_window():
               text="Send", font=('ariel', 11)).place(x=320, y=350)
 
 def send_cmd_command(cmd_entry):
+    """
+    this function sends the user's command to the server and shows
+    its output
+    :param cmd_entry:
+    :return:
+    """
     command = cmd_entry.get()
     clear_entries(cmd_entry)
     data = \
@@ -88,12 +123,21 @@ def send_cmd_command(cmd_entry):
     show_cmd_output()
 
 def change_text_in_text_box(text):
+    """
+    this function changes the text in the cmd output text widget
+    :param text: the text that will be inserted
+    :return:
+    """
     text_box.config(state='normal')
     text_box.delete(1.0, tk.END)
     text_box.insert(tk.END, text)
     text_box.config(state='disabled')
 
 def show_cmd_output():
+    """
+    shows the cmd output to the user
+    :return:
+    """
     output = Server.run_cmd_command()
     change_text_in_text_box(output)
 
