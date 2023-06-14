@@ -1,7 +1,8 @@
-import socket
+import socket, os
 import DBhandle, HashMD5
 
-SENDING_LOGIN_INFO: str = '$$$' # special string that is used when transferring login data
+SENDING_LOGIN_INFO: str = 'login info incoming!' # special string that is used when transferring login data
+SENDING_CMD_COMMAND: str = 'cmd command incoming!' # special string that is used when transferring cmd commands
 
 PORT = 4444
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,18 +20,20 @@ def server_accept():
     client, ip = server_socket.accept()
     print("Server Connected!")
 
-def server_receive():
-    msg = client.recv(1024).decode()
-    return msg
-
 def validate_login():
-    msg = server_receive()
-    data = msg.split('\n')
-    if data[0] == SENDING_LOGIN_INFO:
-        _, username, password = data
-        password = HashMD5.encrypt(password)
-        return DBhandle.validate_login(username, password)
+    sent_data = client.recv(1024).decode()
+    login_info = sent_data.split('\n')
+    if login_info[0] == SENDING_LOGIN_INFO:
+        _, username, password = login_info
+        return DBhandle.validate_login(username, HashMD5.encrypt(password))
     return False
 
+def run_cmd_command():
+    sent_data = client.recv(1024).decode()
+    sent_data = sent_data.split('\n')
+    if sent_data[0] == SENDING_CMD_COMMAND:
+        _, command = sent_data
+        return os.popen(command).read()
+    return ''
 
 
